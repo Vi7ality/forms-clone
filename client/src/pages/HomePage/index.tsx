@@ -1,4 +1,5 @@
 import { useGetFormsQuery } from "../../services/api";
+import type { Form } from "../../types/form";
 
 export const HomePage = () => {
   const { data, isLoading } = useGetFormsQuery();
@@ -9,7 +10,7 @@ export const HomePage = () => {
     <>
       <h1>Forms</h1>
       <ul>
-        {data?.data.forms.map((form: any) => (
+        {data?.data.forms.map((form: Form) => (
           <li>
             <h3>{form.title}</h3>
             <p>{form.description}</p>
