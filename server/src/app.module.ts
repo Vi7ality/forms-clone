@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { FormModule } from './form/form.module';
@@ -16,6 +17,6 @@ import { DatabaseService } from './common/database.service';
     ResponseModule,
   ],
   controllers: [AppController],
-  providers: [DatabaseService],
+  providers: [AppService, DatabaseService],
 })
 export class AppModule {}
