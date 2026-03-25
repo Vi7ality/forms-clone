@@ -1,0 +1,43 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
+
+export const api = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:3000/graphql",
+    method: "POST",
+  }),
+  endpoints: (builder) => ({
+    getForms: builder.query<any, void>({
+      query: () => ({
+        url: "",
+        body: {
+          query: `
+            query {
+              forms {
+                id
+                title
+                description
+              }
+            }
+          `,
+        },
+      }),
+    }),
+    createForm: builder.mutation<any, any>({
+      query: (input) => ({
+        url: "",
+        body: {
+          query: `
+            mutation CreateForm($input: CreateFormInput!) {
+              createForm(input: $input) {
+                id
+                title
+              }
+            }
+          `,
+          variables: { input },
+        },
+      }),
+    }),
+  }),
+});
