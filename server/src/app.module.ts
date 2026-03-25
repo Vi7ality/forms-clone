@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { FormModule } from './form/form.module';
+import { ResponseModule } from './response/response.module';
 
 @Module({
   imports: [
@@ -10,6 +12,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
+    FormModule,
+    ResponseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
