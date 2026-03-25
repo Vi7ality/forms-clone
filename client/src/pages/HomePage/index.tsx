@@ -1,6 +1,6 @@
-import { useGetFormsQuery } from "../services/api";
+import { useGetFormsQuery } from "../../services/api";
 
-export const HopePage = () => {
+export const HomePage = () => {
   const { data, isLoading } = useGetFormsQuery();
 
   if (isLoading) return <>Loading</>;
