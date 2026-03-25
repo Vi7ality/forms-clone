@@ -1,13 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { AnswerInput } from './answer.input';
 
 @InputType()
-export class AnswerInput {
+export class SubmitResponseInput {
   @Field()
-  questionId: string;
+  formId: string;
 
-  @Field({ nullable: true })
-  value?: string;
-
-  @Field(() => [String], { nullable: true })
-  values?: string[];
+  @Field(() => [AnswerInput])
+  answers: AnswerInput[];
 }
