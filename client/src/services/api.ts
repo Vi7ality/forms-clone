@@ -1,18 +1,32 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GraphQLResponse } from "../types/graphql";
-import type { CreateFormResponse, GetFormsResponse } from "../types/api";
+import type {
+  CreateFormInput,
+  CreateFormResponse,
+  GetFormResponse,
+  GetFormsResponse,
+  GetResponsesResponse,
+  SubmitResponseInput,
+  SubmitResponseResponse,
+} from "../types/api";
 import type { Form } from "../types/form";
+import type { Response } from "../types/response";
 
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/graphql",
-    method: "POST",
+    prepareHeaders: (headers) => {
+      // Nest GraphQL expects JSON POST bodies
+      headers.set("content-type", "application/json");
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
-    getForms: builder.query<GraphQLResponse<GetFormsResponse>, void>({
+    getForms: builder.query<Form[], void>({
       query: () => ({
         url: "",
+        method: "POST",
         body: {
           query: `
             query {
@@ -25,19 +39,28 @@ export const api = createApi({
           `,
         },
       }),
+      transformResponse: (response: GraphQLResponse<GetFormsResponse>) => response.data.forms,
     }),
     createForm: builder.mutation<
       GraphQLResponse<CreateFormResponse>,
-      { title: string; description?: string }
+      CreateFormInput
     >({
       query: (input) => ({
         url: "",
+        method: "POST",
         body: {
           query: `
             mutation CreateForm($input: CreateFormInput!) {
               createForm(input: $input) {
                 id
                 title
+                description
+                questions {
+                  id
+                  title
+                  type
+                  options
+                }
               }
             }
           `,
@@ -45,9 +68,10 @@ export const api = createApi({
         },
       }),
     }),
-    getForm: builder.query<Form, string>({
+    getForm: builder.query<Form | null, string>({
       query: (id) => ({
         url: "",
+        method: "POST",
         body: {
           query: `
         query GetForm($id: ID!) {
@@ -67,12 +91,14 @@ export const api = createApi({
           variables: { id },
         },
       }),
-      transformResponse: (response: any) => response.data.form,
+      transformResponse: (response: GraphQLResponse<GetFormResponse>) =>
+        response.data.form,
     }),
 
-    getResponses: builder.query<any, string>({
+    getResponses: builder.query<Response[], string>({
       query: (formId) => ({
         url: "",
+        method: "POST",
         body: {
           query: `
         query GetResponses($formId: ID!) {
@@ -90,21 +116,32 @@ export const api = createApi({
           variables: { formId },
         },
       }),
-      transformResponse: (response: any) => response.data.responses,
+      transformResponse: (response: GraphQLResponse<GetResponsesResponse>) =>
+        response.data.responses,
     }),
 
-    submitResponse: builder.mutation<any, { formId: string; answers: any[] }>({
-      query: (body) => ({
+    submitResponse: builder.mutation<
+      GraphQLResponse<SubmitResponseResponse>,
+      SubmitResponseInput
+    >({
+      query: (input) => ({
         url: "",
+        method: "POST",
         body: {
           query: `
         mutation Submit($input: SubmitResponseInput!) {
           submitResponse(input: $input) {
             id
+            formId
+            answers {
+              questionId
+              value
+              values
+            }
           }
         }
       `,
-          variables: { input: body },
+          variables: { input },
         },
       }),
     }),
@@ -116,4 +153,5 @@ export const {
   useCreateFormMutation,
   useGetFormQuery,
   useSubmitResponseMutation,
+  useGetResponsesQuery,
 } = api;
