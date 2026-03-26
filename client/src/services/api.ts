@@ -47,6 +47,7 @@ export const api = createApi({
     }),
     getForm: builder.query<Form, string>({
       query: (id) => ({
+        url: "",
         body: {
           query: `
         query GetForm($id: ID!) {
@@ -71,6 +72,7 @@ export const api = createApi({
 
     submitResponse: builder.mutation<any, { formId: string; answers: any[] }>({
       query: (body) => ({
+        url: "",
         body: {
           query: `
         mutation Submit($input: SubmitResponseInput!) {
