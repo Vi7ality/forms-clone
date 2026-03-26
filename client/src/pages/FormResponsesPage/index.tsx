@@ -15,47 +15,38 @@ const FormResponsesPage = () => {
   const questionMap = Object.fromEntries(form.questions.map((q) => [q.id, q]));
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Responses for: {form.title}</h1>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Responses for: {form.title}</h1>
 
-      {responses.length === 0 && <p>No responses yet</p>}
+      {responses.length === 0 && <p className="text-gray-500">No responses yet</p>}
 
-      {responses.map((response: any, index: number) => (
-        <div
-          key={response.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 15,
-            marginBottom: 15,
-          }}
-        >
-          <h3>Response #{index + 1}</h3>
+      <div className="space-y-4">
+        {responses.map((res, idx) => (
+          <div key={res.id} className="bg-white p-4 border rounded shadow-sm">
+            <h3 className="font-medium mb-2">Response #{idx + 1}</h3>
+            <div className="space-y-2">
+              {res.answers.map((ans) => {
+                const question = questionMap[ans.questionId];
+                if (!question) return null;
 
-          {response.answers.map((ans: any) => {
-            const question = questionMap[ans.questionId];
-
-            if (!question) return null;
-
-            return (
-              <div key={ans.questionId} style={{ marginBottom: 10 }}>
-                <strong>{question.title}</strong>
-
-                <div>
-                  {ans.value && <span>{ans.value}</span>}
-
-                  {ans.values && ans.values.length > 0 && (
-                    <ul>
-                      {ans.values.map((v: string) => (
-                        <li key={v}>{v}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+                return (
+                  <div key={ans.questionId}>
+                    <p className="font-medium">{question.title}</p>
+                    {ans.value && <p className="text-gray-700">{ans.value}</p>}
+                    {ans.values && ans.values.length > 0 && (
+                      <ul className="list-disc list-inside text-gray-700">
+                        {ans.values.map((v) => (
+                          <li key={v}>{v}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

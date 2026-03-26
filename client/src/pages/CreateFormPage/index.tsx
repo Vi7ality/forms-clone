@@ -109,54 +109,45 @@ const CreateFormPage = () => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Create Form</h1>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Create Form</h1>
 
-      <div style={{ marginBottom: 20 }}>
-        <input
-          placeholder="Form title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{ display: "block", marginBottom: 10, width: 300 }}
-        />
+      <input
+        className="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Form title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
 
-        <input
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={{ display: "block", width: 300 }}
-        />
-      </div>
+      <textarea
+        className="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
 
-      <button onClick={addQuestion} style={{ marginBottom: 20 }}>
-        Add Question
+      <button
+        onClick={addQuestion}
+        className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        + Add Question
       </button>
 
       {questions.map((q) => (
-        <div
-          key={q.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 15,
-            marginBottom: 15,
-          }}
-        >
+        <div key={q.id} className="mb-4 p-4 border rounded bg-gray-50 shadow-sm space-y-2">
           <input
+            className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
             placeholder="Question title"
             value={q.title}
             onChange={(e) => updateQuestion(q.id, { title: e.target.value })}
-            style={{ display: "block", marginBottom: 10, width: 300 }}
           />
 
           <select
+            className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
             value={q.type}
             onChange={(e) =>
-              updateQuestion(q.id, {
-                type: e.target.value as QuestionType,
-                options: [],
-              })
+              updateQuestion(q.id, { type: e.target.value as QuestionType, options: [] })
             }
-            style={{ marginBottom: 10 }}
           >
             <option value="TEXT">Text</option>
             <option value="MULTIPLE_CHOICE">Multiple choice</option>
@@ -164,29 +155,36 @@ const CreateFormPage = () => {
             <option value="DATE">Date</option>
           </select>
 
-          {(q.type === QuestionType.MULTIPLE_CHOICE || q.type === QuestionType.CHECKBOX) && (
-            <div>
+          {(q.type === "MULTIPLE_CHOICE" || q.type === "CHECKBOX") && (
+            <div className="space-y-1">
               {q.options.map((opt, idx) => (
-                <div key={idx} style={{ marginBottom: 5 }}>
-                  <input value={opt} onChange={(e) => updateOption(q.id, idx, e.target.value)} />
-                  <button onClick={() => removeOption(q.id, idx)} style={{ marginLeft: 5 }}>
-                    x
-                  </button>
-                </div>
+                <input
+                  key={idx}
+                  className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  value={opt}
+                  onChange={(e) => {
+                    const newOptions = [...q.options];
+                    newOptions[idx] = e.target.value;
+                    updateQuestion(q.id, { options: newOptions });
+                  }}
+                />
               ))}
-
-              <button onClick={() => addOption(q.id)}>Add Option</button>
+              <button
+                className="mt-1 bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                onClick={() => addOption(q.id)}
+              >
+                + Add Option
+              </button>
             </div>
           )}
-
-          <div style={{ marginTop: 10 }}>
-            <button onClick={() => removeQuestion(q.id)}>Delete Question</button>
-          </div>
         </div>
       ))}
 
-      <button onClick={handleSubmit} disabled={isLoading}>
-        {isLoading ? "Saving..." : "Save Form"}
+      <button
+        onClick={handleSubmit}
+        className="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
+        Save Form
       </button>
     </div>
   );
