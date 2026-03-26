@@ -1,7 +1,7 @@
 import { useGetFormsQuery } from "../../services/api";
 import type { Form } from "../../types/form";
 
-export const HomePage = () => {
+const HomePage = () => {
   const { data, isLoading } = useGetFormsQuery();
 
   if (isLoading) return <>Loading</>;
@@ -20,3 +20,5 @@ export const HomePage = () => {
     </>
   );
 };
+
+export default HomePage;

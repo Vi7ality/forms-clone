@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GraphQLResponse } from "../types/graphql";
 import type { CreateFormResponse, GetFormsResponse } from "../types/api";
+import type { Form } from "../types/form";
 
 export const api = createApi({
   reducerPath: "api",
@@ -44,7 +45,50 @@ export const api = createApi({
         },
       }),
     }),
+    getForm: builder.query<Form, string>({
+      query: (id) => ({
+        body: {
+          query: `
+        query GetForm($id: ID!) {
+          form(id: $id) {
+            id
+            title
+            description
+            questions {
+              id
+              title
+              type
+              options
+            }
+          }
+        }
+      `,
+          variables: { id },
+        },
+      }),
+      transformResponse: (response: any) => response.data.form,
+    }),
+
+    submitResponse: builder.mutation<any, { formId: string; answers: any[] }>({
+      query: (body) => ({
+        body: {
+          query: `
+        mutation Submit($input: SubmitResponseInput!) {
+          submitResponse(input: $input) {
+            id
+          }
+        }
+      `,
+          variables: { input: body },
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetFormsQuery, useCreateFormMutation } = api;
+export const {
+  useGetFormsQuery,
+  useCreateFormMutation,
+  useGetFormQuery,
+  useSubmitResponseMutation,
+} = api;
