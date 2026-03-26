@@ -70,6 +70,29 @@ export const api = createApi({
       transformResponse: (response: any) => response.data.form,
     }),
 
+    getResponses: builder.query<any, string>({
+      query: (formId) => ({
+        url: "",
+        body: {
+          query: `
+        query GetResponses($formId: ID!) {
+          responses(formId: $formId) {
+            id
+            formId
+            answers {
+              questionId
+              value
+              values
+            }
+          }
+        }
+      `,
+          variables: { formId },
+        },
+      }),
+      transformResponse: (response: any) => response.data.responses,
+    }),
+
     submitResponse: builder.mutation<any, { formId: string; answers: any[] }>({
       query: (body) => ({
         url: "",
