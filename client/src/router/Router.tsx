@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import CreateFormPage from "../pages/CreateFormPage";
 import FormFillPage from "../pages/FormFillPage";
+import FormResponsesPage from "../pages/FormResponsesPage";
 
 const routes: RouteObject[] = [
   {
@@ -15,6 +16,10 @@ const routes: RouteObject[] = [
   {
     path: "/forms/:id/fill",
     element: <FormFillPage />,
+  },
+  {
+    path: "/forms/:id/responses",
+    element: <FormResponsesPage />,
   },
 ];
 
