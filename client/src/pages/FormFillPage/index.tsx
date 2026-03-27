@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetFormQuery, useSubmitResponseMutation } from "../../services/api";
 import { useState } from "react";
 import { QuestionType } from "../../types/form";
+import formatAnswersForSubmit from "../../utils/formatAnswersForSubmit";
 
 type AnswerState = {
   [questionId: string]: string | string[];
@@ -38,11 +39,7 @@ const FormFillPage = () => {
   };
 
   const handleSubmit = async () => {
-    const formattedAnswers = form.questions.map((q) => ({
-      questionId: q.id,
-      value: q.type === QuestionType.CHECKBOX ? undefined : (answers[q.id] as string) || "",
-      values: q.type === QuestionType.CHECKBOX ? (answers[q.id] as string[]) || [] : undefined,
-    }));
+    const formattedAnswers = formatAnswersForSubmit(form, answers);
 
     try {
       await submitResponse({
@@ -87,7 +84,7 @@ const FormFillPage = () => {
 
           {q.type === QuestionType.MULTIPLE_CHOICE && (
             <div className="flex flex-col space-y-2">
-              {q.options.map((opt, idx) => (
+              {q.options?.map((opt, idx) => (
                 <label key={idx} className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -104,7 +101,7 @@ const FormFillPage = () => {
 
           {q.type === QuestionType.CHECKBOX && (
             <div className="flex flex-col space-y-2">
-              {q.options.map((opt, idx) => {
+              {q.options?.map((opt, idx) => {
                 const selected = (answers[q.id] as string[]) || [];
                 return (
                   <label key={idx} className="flex items-center gap-2">
