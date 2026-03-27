@@ -118,7 +118,7 @@ export const api = createApi({
       }),
       transformResponse: (response: GraphQLResponse<GetResponsesResponse>) =>
         response.data.responses,
-      providesTags: (result, error, formId) => [{ type: "Responses", id: formId }],
+      providesTags: (_result, _error, formId) => [{ type: "Responses", id: formId }],
     }),
 
     submitResponse: builder.mutation<Response, SubmitResponseInput>({
@@ -144,7 +144,7 @@ export const api = createApi({
       }),
       transformResponse: (response: GraphQLResponse<SubmitResponseResponse>) =>
         response.data.submitResponse,
-      invalidatesTags: (result, error, arg) => [{ type: "Responses", id: arg.formId }],
+      invalidatesTags: (_result, _error, arg) => [{ type: "Responses", id: arg.formId }],
     }),
   }),
 });
