@@ -16,9 +16,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@reduxjs/toolkit": "^2.11.2",
-    "concurrently": "^9.2.1",
-    "graphql-request": "^7.4.0",
-    "react-redux": "^9.2.0",
+    "concurrently": "^9.2.1"
   }
 }
