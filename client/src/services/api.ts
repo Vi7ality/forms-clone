@@ -21,6 +21,7 @@ export const api = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Forms", "Responses"],
   endpoints: (builder) => ({
     getForms: builder.query<Form[], void>({
       query: () => ({
@@ -39,6 +40,7 @@ export const api = createApi({
         }),
       }),
       transformResponse: (response: GraphQLResponse<GetFormsResponse>) => response.data.forms,
+      providesTags: ["Forms"],
     }),
     createForm: builder.mutation<GraphQLResponse<CreateFormResponse>, CreateFormInput>({
       query: (input) => ({
@@ -63,6 +65,7 @@ export const api = createApi({
           variables: { input },
         }),
       }),
+      invalidatesTags: ["Forms"],
     }),
     getForm: builder.query<Form | null, string>({
       query: (id) => ({
@@ -113,6 +116,7 @@ export const api = createApi({
       }),
       transformResponse: (response: GraphQLResponse<GetResponsesResponse>) =>
         response.data.responses,
+      providesTags: (result, error, formId) => [{ type: "Responses", id: formId }],
     }),
 
     submitResponse: builder.mutation<GraphQLResponse<SubmitResponseResponse>, SubmitResponseInput>({
@@ -136,6 +140,7 @@ export const api = createApi({
           variables: { input },
         }),
       }),
+      invalidatesTags: (result, error, arg) => [{ type: "Responses", id: arg.formId }],
     }),
   }),
 });

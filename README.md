@@ -32,14 +32,17 @@ cd forms-clone
 npm install
 ```
 
-3. Install client and server packages:
+## Running Locally
+
+### Run Both Together (Optional)
+
+If a root script is available to run both concurrently, from repository root:
 
 ```bash
-cd client && npm install
-cd ../server && npm install
+npm run dev
 ```
 
-## Running Locally
+(If not configured, run server and client in separate terminals as bellow.)
 
 ### Start Server
 
@@ -62,16 +65,6 @@ npm run dev
 ```
 
 2. Client runs by default at `http://localhost:5173` (Vite).
-
-### Run Both Together (Optional)
-
-If a root script is available to run both concurrently, from repository root:
-
-```bash
-npm run dev
-```
-
-(If not configured, run server and client in separate terminals as above.)
 
 ## Test and Quality
 
