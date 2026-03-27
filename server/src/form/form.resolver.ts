@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { Form } from './models/form.model';
 import { FormService } from './form.service';
 import { CreateFormInput } from './dto/create-form.input';
@@ -13,7 +13,7 @@ export class FormResolver {
   }
 
   @Query(() => Form, { nullable: true })
-  form(@Args('id') id: string) {
+  form(@Args('id', { type: () => ID }) id: string) {
     return this.formService.getForm(id);
   }
 

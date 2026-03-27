@@ -12,7 +12,10 @@
     "dev": "concurrently \"npm run dev -w client\" \"npm run start:dev -w server\""
   },
   "keywords": [],
-  "author": "",
+  "author": "vitalii138@gmail.com",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
