@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { QuestionType } from "../../types/form";
 import { useCreateFormMutation } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 type QuestionDraft = {
   id: string;
@@ -14,6 +15,7 @@ const CreateFormPage = () => {
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
   const [createForm] = useCreateFormMutation();
+  const navigate = useNavigate();
 
   const addQuestion = () => {
     setQuestions((prev) => [
@@ -102,6 +104,7 @@ const CreateFormPage = () => {
       setTitle("");
       setDescription("");
       setQuestions([]);
+      navigate("/");
     } catch (error) {
       console.error(error);
       alert("Error creating form");

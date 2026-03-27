@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetFormQuery, useSubmitResponseMutation } from "../../services/api";
 import { useState } from "react";
 import { QuestionType } from "../../types/form";
@@ -9,9 +9,9 @@ type AnswerState = {
 
 const FormFillPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { data: form, isLoading } = useGetFormQuery(id!);
   const [submitResponse, { isLoading: isSubmitting }] = useSubmitResponseMutation();
-
   const [answers, setAnswers] = useState<AnswerState>({});
 
   if (isLoading) return <div>Loading...</div>;
@@ -52,7 +52,7 @@ const FormFillPage = () => {
 
       alert("Form submitted!");
       setAnswers({});
-      navigate;
+      navigate("/");
     } catch (e) {
       console.error(e);
       alert("Error submitting form");
@@ -61,48 +61,63 @@ const FormFillPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">{form.title}</h1>
+      <h1 className="text-3xl font-bold mb-4">{form.title}</h1>
       <p className="text-gray-600 mb-6">{form.description}</p>
 
       {form.questions.map((q) => (
-        <div key={q.id} className="mb-4">
-          <label className="block mb-1 font-medium">{q.title}</label>
+        <div key={q.id} className="mb-6">
+          <label className="block mb-2 font-medium">{q.title}</label>
 
-          {q.type === "TEXT" && (
+          {q.type === QuestionType.TEXT && (
             <input
-              className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={answers[q.id] || ""}
-              onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+              onChange={(e) => handleChange(q.id, e.target.value)}
             />
           )}
 
-          {q.type === "DATE" && (
+          {q.type === QuestionType.DATE && (
             <input
               type="date"
-              className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={answers[q.id] || ""}
-              onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+              onChange={(e) => handleChange(q.id, e.target.value)}
             />
           )}
 
-          {(q.type === "MULTIPLE_CHOICE" || q.type === "CHECKBOX") && (
-            <div className="space-y-1">
+          {q.type === QuestionType.MULTIPLE_CHOICE && (
+            <div className="flex flex-col space-y-2">
               {q.options.map((opt, idx) => (
                 <label key={idx} className="flex items-center gap-2">
                   <input
-                    type={q.type === "MULTIPLE_CHOICE" ? "radio" : "checkbox"}
+                    type="radio"
                     name={q.id}
                     value={opt}
-                    checked={
-                      q.type === "MULTIPLE_CHOICE"
-                        ? answers[q.id] === opt
-                        : answers[q.id]?.includes(opt)
-                    }
-                    onChange={(e) => handleOptionChange(q.id, opt, q.type)}
+                    checked={answers[q.id] === opt}
+                    onChange={() => handleChange(q.id, opt)}
                   />
                   <span>{opt}</span>
                 </label>
               ))}
+            </div>
+          )}
+
+          {q.type === QuestionType.CHECKBOX && (
+            <div className="flex flex-col space-y-2">
+              {q.options.map((opt, idx) => {
+                const selected = (answers[q.id] as string[]) || [];
+                return (
+                  <label key={idx} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      value={opt}
+                      checked={selected.includes(opt)}
+                      onChange={(e) => handleCheckboxChange(q.id, opt, e.target.checked)}
+                    />
+                    <span>{opt}</span>
+                  </label>
+                );
+              })}
             </div>
           )}
         </div>
@@ -110,9 +125,10 @@ const FormFillPage = () => {
 
       <button
         onClick={handleSubmit}
-        className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+        disabled={isSubmitting}
       >
-        Submit
+        {isSubmitting ? "Submitting..." : "Submit"}
       </button>
     </div>
   );
