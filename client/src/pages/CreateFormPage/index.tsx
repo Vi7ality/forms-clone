@@ -13,7 +13,7 @@ const CreateFormPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
-  const [createForm, { isLoading }] = useCreateFormMutation();
+  const [createForm] = useCreateFormMutation();
 
   const addQuestion = () => {
     setQuestions((prev) => [
@@ -109,7 +109,7 @@ const CreateFormPage = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6 ">
       <h1 className="text-3xl font-bold mb-6">Create Form</h1>
 
       <input
@@ -125,67 +125,78 @@ const CreateFormPage = () => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-
-      <button
-        onClick={addQuestion}
-        className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        + Add Question
-      </button>
-
-      {questions.map((q) => (
-        <div key={q.id} className="mb-4 p-4 border rounded bg-gray-50 shadow-sm space-y-2">
-          <input
-            className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-            placeholder="Question title"
-            value={q.title}
-            onChange={(e) => updateQuestion(q.id, { title: e.target.value })}
-          />
-
-          <select
-            className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-            value={q.type}
-            onChange={(e) =>
-              updateQuestion(q.id, { type: e.target.value as QuestionType, options: [] })
-            }
+      <ul>
+        {questions.map((q) => (
+          <li
+            key={q.id}
+            className="mb-4 p-4 border rounded bg-gray-50 shadow-sm space-y-2 flex flex-col items-start"
           >
-            <option value="TEXT">Text</option>
-            <option value="MULTIPLE_CHOICE">Multiple choice</option>
-            <option value="CHECKBOX">Checkbox</option>
-            <option value="DATE">Date</option>
-          </select>
+            <input
+              className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+              placeholder="Question title"
+              value={q.title}
+              onChange={(e) => updateQuestion(q.id, { title: e.target.value })}
+            />
 
-          {(q.type === "MULTIPLE_CHOICE" || q.type === "CHECKBOX") && (
-            <div className="space-y-1">
-              {q.options.map((opt, idx) => (
-                <input
-                  key={idx}
-                  className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
-                  value={opt}
-                  onChange={(e) => {
-                    const newOptions = [...q.options];
-                    newOptions[idx] = e.target.value;
-                    updateQuestion(q.id, { options: newOptions });
-                  }}
-                />
-              ))}
-              <button
-                className="mt-1 bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
-                onClick={() => addOption(q.id)}
-              >
-                + Add Option
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+            <select
+              className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={q.type}
+              onChange={(e) =>
+                updateQuestion(q.id, { type: e.target.value as QuestionType, options: [] })
+              }
+            >
+              <option value="TEXT">Text</option>
+              <option value="MULTIPLE_CHOICE">Multiple choice</option>
+              <option value="CHECKBOX">Checkbox</option>
+              <option value="DATE">Date</option>
+            </select>
 
-      <button
-        onClick={handleSubmit}
-        className="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        Save Form
-      </button>
+            {(q.type === "MULTIPLE_CHOICE" || q.type === "CHECKBOX") && (
+              <ul className="space-y-1">
+                {q.options.map((opt, idx) => (
+                  <li className="flex gap-2">
+                    <input
+                      key={idx}
+                      className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      value={opt}
+                      onChange={(e) => updateOption(q.id, idx, e.target.value)}
+                    />
+
+                    <button onClick={() => removeOption(q.id, idx)} className="text-red-500">
+                      ✕
+                    </button>
+                  </li>
+                ))}
+                <button
+                  className="mt-1 bg-gray-200 rounded hover:bg-gray-300"
+                  onClick={() => addOption(q.id)}
+                >
+                  + Add option
+                </button>
+              </ul>
+            )}
+
+            <button onClick={() => removeQuestion(q.id)} className="text-red-500 text-sm">
+              Remove question
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-col items-start">
+        <button
+          onClick={addQuestion}
+          className="mb-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          + Add Question
+        </button>
+
+        <button
+          onClick={handleSubmit}
+          className=" bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Save form
+        </button>
+      </div>
     </div>
   );
 };

@@ -52,6 +52,7 @@ const FormFillPage = () => {
 
       alert("Form submitted!");
       setAnswers({});
+      navigate;
     } catch (e) {
       console.error(e);
       alert("Error submitting form");
