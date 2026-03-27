@@ -4,13 +4,7 @@ import { useCreateFormMutation } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import validateCreateForm from "../../utils/validateCreateForm";
 import { notify } from "../../utils/notify";
-
-type QuestionDraft = {
-  id: string;
-  title: string;
-  type: QuestionType;
-  options: string[];
-};
+import type { QuestionDraft } from "../../types/questionDraft";
 
 const CreateFormPage = () => {
   const [title, setTitle] = useState("");
