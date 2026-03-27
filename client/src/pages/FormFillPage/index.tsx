@@ -3,6 +3,8 @@ import { useGetFormQuery, useSubmitResponseMutation } from "../../services/api";
 import { useState } from "react";
 import { QuestionType } from "../../types/form";
 import formatAnswersForSubmit from "../../utils/formatAnswersForSubmit";
+import validateFilledForm from "../../utils/validateFilledForm";
+import { notify } from "../../utils/notify";
 
 type AnswerState = {
   [questionId: string]: string | string[];
@@ -40,19 +42,24 @@ const FormFillPage = () => {
 
   const handleSubmit = async () => {
     const formattedAnswers = formatAnswersForSubmit(form, answers);
+    const errors = validateFilledForm(form, answers);
 
+    if (errors.length > 0) {
+      notify.error(errors[0].message);
+      return;
+    }
     try {
       await submitResponse({
         formId: form.id,
         answers: formattedAnswers,
       }).unwrap();
 
-      alert("Form submitted!");
+      notify.success("Form submitted!");
       setAnswers({});
       navigate("/");
     } catch (e) {
       console.error(e);
-      alert("Error submitting form");
+      notify.error("Error submitting form");
     }
   };
 

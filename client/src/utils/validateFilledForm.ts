@@ -28,3 +28,5 @@ export function validateFilledForm(
 
   return errors;
 }
+
+export default validateFilledForm;

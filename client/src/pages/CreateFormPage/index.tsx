@@ -2,6 +2,8 @@ import { useState } from "react";
 import { QuestionType } from "../../types/form";
 import { useCreateFormMutation } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import validateCreateForm from "../../utils/validateCreateForm";
+import { notify } from "../../utils/notify";
 
 type QuestionDraft = {
   id: string;
@@ -70,18 +72,10 @@ const CreateFormPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
-      alert("Form title is required");
-      return;
-    }
+    const errors = validateCreateForm({ title, questions });
 
-    if (questions.length === 0) {
-      alert("Add at least one question");
-      return;
-    }
-
-    if (questions.some((q) => !q.title.trim())) {
-      alert("All questions must have a title");
+    if (errors.length > 0) {
+      notify.error(errors[0].message);
       return;
     }
 
@@ -99,7 +93,7 @@ const CreateFormPage = () => {
         })),
       }).unwrap();
 
-      alert("Form created!");
+      notify.success("Form created!");
 
       setTitle("");
       setDescription("");
@@ -107,7 +101,7 @@ const CreateFormPage = () => {
       navigate("/");
     } catch (error) {
       console.error(error);
-      alert("Error creating form");
+      notify.error("Error creating form");
     }
   };
 
