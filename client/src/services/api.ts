@@ -42,7 +42,7 @@ export const api = createApi({
       transformResponse: (response: GraphQLResponse<GetFormsResponse>) => response.data.forms,
       providesTags: ["Forms"],
     }),
-    createForm: builder.mutation<GraphQLResponse<CreateFormResponse>, CreateFormInput>({
+    createForm: builder.mutation<Form, CreateFormInput>({
       query: (input) => ({
         url: "/graphql",
         method: "POST",
@@ -65,6 +65,8 @@ export const api = createApi({
           variables: { input },
         }),
       }),
+      transformResponse: (response: GraphQLResponse<CreateFormResponse>) =>
+        response.data.createForm,
       invalidatesTags: ["Forms"],
     }),
     getForm: builder.query<Form | null, string>({
@@ -119,7 +121,7 @@ export const api = createApi({
       providesTags: (result, error, formId) => [{ type: "Responses", id: formId }],
     }),
 
-    submitResponse: builder.mutation<GraphQLResponse<SubmitResponseResponse>, SubmitResponseInput>({
+    submitResponse: builder.mutation<Response, SubmitResponseInput>({
       query: (input) => ({
         url: "/graphql",
         method: "POST",
@@ -140,6 +142,8 @@ export const api = createApi({
           variables: { input },
         }),
       }),
+      transformResponse: (response: GraphQLResponse<SubmitResponseResponse>) =>
+        response.data.submitResponse,
       invalidatesTags: (result, error, arg) => [{ type: "Responses", id: arg.formId }],
     }),
   }),
