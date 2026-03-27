@@ -25,7 +25,7 @@ const HomePage = () => {
 
       <div className="space-y-4">
         {forms?.map((form: Form) => (
-          <FormListItem form={form} />
+          <FormListItem form={form} key={form.id} />
         ))}
       </div>
     </div>
