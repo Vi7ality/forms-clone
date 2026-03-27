@@ -17,7 +17,6 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/graphql",
     prepareHeaders: (headers) => {
-      // Nest GraphQL expects JSON POST bodies
       headers.set("content-type", "application/json");
       return headers;
     },
@@ -41,10 +40,7 @@ export const api = createApi({
       }),
       transformResponse: (response: GraphQLResponse<GetFormsResponse>) => response.data.forms,
     }),
-    createForm: builder.mutation<
-      GraphQLResponse<CreateFormResponse>,
-      CreateFormInput
-    >({
+    createForm: builder.mutation<GraphQLResponse<CreateFormResponse>, CreateFormInput>({
       query: (input) => ({
         url: "",
         method: "POST",
@@ -91,8 +87,7 @@ export const api = createApi({
           variables: { id },
         },
       }),
-      transformResponse: (response: GraphQLResponse<GetFormResponse>) =>
-        response.data.form,
+      transformResponse: (response: GraphQLResponse<GetFormResponse>) => response.data.form,
     }),
 
     getResponses: builder.query<Response[], string>({
@@ -120,10 +115,7 @@ export const api = createApi({
         response.data.responses,
     }),
 
-    submitResponse: builder.mutation<
-      GraphQLResponse<SubmitResponseResponse>,
-      SubmitResponseInput
-    >({
+    submitResponse: builder.mutation<GraphQLResponse<SubmitResponseResponse>, SubmitResponseInput>({
       query: (input) => ({
         url: "",
         method: "POST",

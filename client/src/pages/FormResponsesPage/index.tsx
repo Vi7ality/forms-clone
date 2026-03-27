@@ -11,7 +11,6 @@ const FormResponsesPage = () => {
   if (!form) return <div>Form not found</div>;
   if (!responses) return <div>Error loading responses</div>;
 
-  // helper: questionId → question
   const questionMap = Object.fromEntries(form.questions.map((q) => [q.id, q]));
 
   return (
