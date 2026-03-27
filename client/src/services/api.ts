@@ -15,7 +15,7 @@ import type { Response } from "../types/response";
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/graphql",
+    baseUrl: "http://localhost:3000",
     prepareHeaders: (headers) => {
       headers.set("content-type", "application/json");
       return headers;
@@ -24,9 +24,9 @@ export const api = createApi({
   endpoints: (builder) => ({
     getForms: builder.query<Form[], void>({
       query: () => ({
-        url: "",
+        url: "/graphql",
         method: "POST",
-        body: {
+        body: JSON.stringify({
           query: `
             query {
               forms {
@@ -36,15 +36,15 @@ export const api = createApi({
               }
             }
           `,
-        },
+        }),
       }),
       transformResponse: (response: GraphQLResponse<GetFormsResponse>) => response.data.forms,
     }),
     createForm: builder.mutation<GraphQLResponse<CreateFormResponse>, CreateFormInput>({
       query: (input) => ({
-        url: "",
+        url: "/graphql",
         method: "POST",
-        body: {
+        body: JSON.stringify({
           query: `
             mutation CreateForm($input: CreateFormInput!) {
               createForm(input: $input) {
@@ -61,14 +61,14 @@ export const api = createApi({
             }
           `,
           variables: { input },
-        },
+        }),
       }),
     }),
     getForm: builder.query<Form | null, string>({
       query: (id) => ({
-        url: "",
+        url: "/graphql",
         method: "POST",
-        body: {
+        body: JSON.stringify({
           query: `
         query GetForm($id: ID!) {
           form(id: $id) {
@@ -85,16 +85,16 @@ export const api = createApi({
         }
       `,
           variables: { id },
-        },
+        }),
       }),
       transformResponse: (response: GraphQLResponse<GetFormResponse>) => response.data.form,
     }),
 
     getResponses: builder.query<Response[], string>({
       query: (formId) => ({
-        url: "",
+        url: "/graphql",
         method: "POST",
-        body: {
+        body: JSON.stringify({
           query: `
         query GetResponses($formId: ID!) {
           responses(formId: $formId) {
@@ -109,7 +109,7 @@ export const api = createApi({
         }
       `,
           variables: { formId },
-        },
+        }),
       }),
       transformResponse: (response: GraphQLResponse<GetResponsesResponse>) =>
         response.data.responses,
@@ -117,9 +117,9 @@ export const api = createApi({
 
     submitResponse: builder.mutation<GraphQLResponse<SubmitResponseResponse>, SubmitResponseInput>({
       query: (input) => ({
-        url: "",
+        url: "/graphql",
         method: "POST",
-        body: {
+        body: JSON.stringify({
           query: `
         mutation Submit($input: SubmitResponseInput!) {
           submitResponse(input: $input) {
@@ -134,7 +134,7 @@ export const api = createApi({
         }
       `,
           variables: { input },
-        },
+        }),
       }),
     }),
   }),
