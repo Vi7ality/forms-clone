@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import validateCreateForm from "../../utils/validateCreateForm";
 import { notify } from "../../utils/notify";
 import type { QuestionDraft } from "../../types/questionDraft";
+import QuestionListItem from "../../components/QuestionListItem";
 
 const CreateFormPage = () => {
   const [title, setTitle] = useState("");
@@ -121,59 +122,15 @@ const CreateFormPage = () => {
       />
       <ul>
         {questions.map((q) => (
-          <li
+          <QuestionListItem
             key={q.id}
-            className="mb-4 p-4 border rounded bg-gray-50 shadow-sm space-y-2 flex flex-col items-start"
-          >
-            <input
-              className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-              placeholder="Question title"
-              value={q.title}
-              onChange={(e) => updateQuestion(q.id, { title: e.target.value })}
-            />
-
-            <select
-              className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={q.type}
-              onChange={(e) =>
-                updateQuestion(q.id, { type: e.target.value as QuestionType, options: [] })
-              }
-            >
-              <option value="TEXT">Text</option>
-              <option value="MULTIPLE_CHOICE">Multiple choice</option>
-              <option value="CHECKBOX">Checkbox</option>
-              <option value="DATE">Date</option>
-            </select>
-
-            {(q.type === "MULTIPLE_CHOICE" || q.type === "CHECKBOX") && (
-              <ul className="space-y-1">
-                {q.options.map((opt, idx) => (
-                  <li className="flex gap-2">
-                    <input
-                      key={idx}
-                      className="w-full px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      value={opt}
-                      onChange={(e) => updateOption(q.id, idx, e.target.value)}
-                    />
-
-                    <button onClick={() => removeOption(q.id, idx)} className="text-red-500">
-                      ✕
-                    </button>
-                  </li>
-                ))}
-                <button
-                  className="mt-1 bg-gray-200 rounded hover:bg-gray-300"
-                  onClick={() => addOption(q.id)}
-                >
-                  + Add option
-                </button>
-              </ul>
-            )}
-
-            <button onClick={() => removeQuestion(q.id)} className="text-red-500 text-sm">
-              Remove question
-            </button>
-          </li>
+            question={q}
+            updateQuestion={updateQuestion}
+            updateOption={updateOption}
+            addOption={addOption}
+            removeOption={removeOption}
+            removeQuestion={removeQuestion}
+          />
         ))}
       </ul>
       <div className="flex flex-col items-start">
