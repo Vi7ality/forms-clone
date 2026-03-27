@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetFormQuery, useGetResponsesQuery } from "../../services/api";
 
 const FormResponsesPage = () => {
@@ -6,6 +6,7 @@ const FormResponsesPage = () => {
 
   const { data: form, isLoading: formLoading } = useGetFormQuery(id!);
   const { data: responses, isLoading: respLoading } = useGetResponsesQuery(id!);
+  const navigate = useNavigate();
 
   if (formLoading || respLoading) return <div>Loading...</div>;
   if (!form) return <div>Form not found</div>;
@@ -15,6 +16,9 @@ const FormResponsesPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 hover:underline">
+        ← Back
+      </button>
       <h1 className="text-3xl font-bold mb-6">Responses for: {form.title}</h1>
 
       {responses.length === 0 && <p className="text-gray-500">No responses yet</p>}
