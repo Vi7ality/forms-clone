@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetFormQuery, useGetResponsesQuery } from "../../services/api";
+import FormResponseCard from "../../components/FormResponseCard";
 
 const FormResponsesPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,29 +26,7 @@ const FormResponsesPage = () => {
 
       <div className="space-y-4">
         {responses.map((res, idx) => (
-          <div key={res.id} className="bg-white p-4 border rounded shadow-sm">
-            <h3 className="font-medium mb-2">Response #{idx + 1}</h3>
-            <div className="space-y-2">
-              {res.answers.map((ans) => {
-                const question = questionMap[ans.questionId];
-                if (!question) return null;
-
-                return (
-                  <div key={ans.questionId}>
-                    <p className="font-medium">{question.title}</p>
-                    {ans.value && <p className="text-gray-700">{ans.value}</p>}
-                    {ans.values && ans.values.length > 0 && (
-                      <ul className="list-disc list-inside text-gray-700">
-                        {ans.values.map((v) => (
-                          <li key={v}>{v}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <FormResponseCard key={res.id} response={res} questionMap={questionMap} index={idx} />
         ))}
       </div>
     </div>

@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetFormQuery, useSubmitResponseMutation } from "../../services/api";
 import { useState } from "react";
-import { QuestionType } from "../../types/form";
 import formatAnswersForSubmit from "../../utils/formatAnswersForSubmit";
 import validateFilledForm from "../../utils/validateFilledForm";
 import { notify } from "../../utils/notify";
+import FormFillQuestion from "../../components/FormFillQuestion";
 
 type AnswerState = {
   [questionId: string]: string | string[];
@@ -72,62 +72,13 @@ const FormFillPage = () => {
       <p className="text-gray-600 mb-6">{form.description}</p>
 
       {form.questions.map((q) => (
-        <div key={q.id} className="mb-6">
-          <label className="block mb-2 font-medium">{q.title}</label>
-
-          {q.type === QuestionType.TEXT && (
-            <input
-              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={answers[q.id] || ""}
-              onChange={(e) => handleChange(q.id, e.target.value)}
-            />
-          )}
-
-          {q.type === QuestionType.DATE && (
-            <input
-              type="date"
-              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={answers[q.id] || ""}
-              onChange={(e) => handleChange(q.id, e.target.value)}
-            />
-          )}
-
-          {q.type === QuestionType.MULTIPLE_CHOICE && (
-            <div className="flex flex-col space-y-2">
-              {q.options?.map((opt, idx) => (
-                <label key={idx} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name={q.id}
-                    value={opt}
-                    checked={answers[q.id] === opt}
-                    onChange={() => handleChange(q.id, opt)}
-                  />
-                  <span>{opt}</span>
-                </label>
-              ))}
-            </div>
-          )}
-
-          {q.type === QuestionType.CHECKBOX && (
-            <div className="flex flex-col space-y-2">
-              {q.options?.map((opt, idx) => {
-                const selected = (answers[q.id] as string[]) || [];
-                return (
-                  <label key={idx} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      value={opt}
-                      checked={selected.includes(opt)}
-                      onChange={(e) => handleCheckboxChange(q.id, opt, e.target.checked)}
-                    />
-                    <span>{opt}</span>
-                  </label>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <FormFillQuestion
+          key={q.id}
+          question={q}
+          value={answers[q.id]}
+          onChange={handleChange}
+          onCheckboxChange={handleCheckboxChange}
+        />
       ))}
 
       <button
